@@ -1,0 +1,168 @@
+<h1 style="margin: 24px">Key Words</h1>
+
+
+<div class="mat-elevation-z8">
+
+  <div class="search-container" style="">
+    <form #form="ngForm">
+
+      <mat-form-field appearance="outline">
+        <mat-label>Search</mat-label>
+        <input matInput placeholder="Search">
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>Status</mat-label>
+
+        <mat-select value="Enabled">
+          <mat-option> All</mat-option>
+          <mat-option value="Enabled">Enabled</mat-option>
+          <mat-option value="Archived">Archived</mat-option>
+        </mat-select>
+      </mat-form-field>
+
+      <!--      <mat-form-field appearance="outline">-->
+      <!--        <mat-label>Campaign Type</mat-label>-->
+      <!--        <mat-select>-->
+      <!--          <mat-option>All</mat-option>-->
+      <!--          <mat-option value="Enabled">Brand</mat-option>-->
+      <!--          <mat-option value="Archived">Products</mat-option>-->
+      <!--        </mat-select>-->
+      <!--      </mat-form-field>-->
+
+      <mat-form-field appearance="outline">
+        <mat-label>From</mat-label>
+        <input [matDatepicker]="from_picker" [max]="now" [value]="now" matInput>
+        <mat-datepicker-toggle [for]="from_picker" matSuffix></mat-datepicker-toggle>
+        <mat-datepicker #from_picker></mat-datepicker>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>To</mat-label>
+        <input [matDatepicker]="to_picker" [max]="now" [value]="now" matInput>
+        <mat-datepicker-toggle [for]="to_picker" matSuffix></mat-datepicker-toggle>
+        <mat-datepicker #to_picker></mat-datepicker>
+      </mat-form-field>
+      <span class="d-f-g-1"></span>
+
+      <button (click)="filterKeyWords()" mat-icon-button style="margin-top: 8px">
+        <mat-icon class="mat-18">filter_alt</mat-icon>
+      </button>
+    </form>
+  </div>
+
+
+  <div *ngIf="selection.selected.length > 0" class="actions-container">
+
+    <button color="primary" mat-raised-button>Adjust Bid</button>
+    <button color="primary" mat-raised-button>Enable</button>
+    <button color="warn" mat-raised-button>Pause</button>
+    <button color="accent" mat-raised-button>Archive</button>
+  </div>
+
+  <table [dataSource]="dataSource" mat-table matSort>
+
+    <ng-container matColumnDef="select">
+      <th *matHeaderCellDef mat-header-cell>
+        <mat-checkbox (change)="$event ? masterToggle() : null"
+                      [checked]="selection.hasValue() && isAllSelected()"
+                      [indeterminate]="selection.hasValue() && !isAllSelected()">
+        </mat-checkbox>
+      </th>
+      <td *matCellDef="let row" mat-cell>
+        <mat-checkbox (change)="$event ? selection.toggle(row) : null"
+                      (click)="$event.stopPropagation()"
+                      [checked]="selection.isSelected(row)">
+        </mat-checkbox>
+      </td>
+    </ng-container>
+
+    <ng-container matColumnDef="keyword">
+      <th *matHeaderCellDef mat-header-cell mat-sort-header> Keyword</th>
+      <td *matCellDef="let element" mat-cell> {{element.keyword}} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="status">
+      <th *matHeaderCellDef mat-header-cell mat-sort-header> Status</th>
+      <td *matCellDef="let element" mat-cell> {{element.status}}
+
+        <button color="warn" mat-icon-button>
+          <mat-icon class="mat-18">stop</mat-icon>
+        </button>
+
+        <button color="primary" mat-icon-button>
+          <mat-icon class="mat-18">play_arrow</mat-icon>
+        </button>
+
+      </td>
+    </ng-container>
+
+    <ng-container matColumnDef="bid">
+      <th *matHeaderCellDef mat-header-cell mat-sort-header> Bid</th>
+      <td *matCellDef="let element" mat-cell>
+
+        <div *ngIf="!element.edit">{{element.bid}}
+          <button (click)="element.edit= true" color="primary" mat-icon-button>
+            <mat-icon class="mat-18">edit</mat-icon>
+          </button>
+        </div>
+        <div *ngIf="element.edit">
+          <mat-form-field appearance="standard">
+            <mat-label>Bid</mat-label>
+            <input matInput placeholder="Bid">
+          </mat-form-field>
+          <button (click)="element.edit= false" color="primary" mat-mini-fab>
+            <mat-icon class="mat-18">save</mat-icon>
+          </button>
+        </div>
+      </td>
+    </ng-container>
+
+    <ng-container matColumnDef="spend">
+      <th *matHeaderCellDef mat-header-cell mat-sort-header> Spend</th>
+      <td *matCellDef="let element" mat-cell> {{element.spend}} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="sales">
+      <th *matHeaderCellDef mat-header-cell mat-sort-header> Sales</th>
+      <td *matCellDef="let element" mat-cell> {{element.sales}} </td>
+    </ng-container>
+    <ng-container matColumnDef="acos">
+      <th *matHeaderCellDef mat-header-cell mat-sort-header> ACoS</th>
+      <td *matCellDef="let element" mat-cell> {{element.acos}} </td>
+    </ng-container>
+    <ng-container matColumnDef="roas">
+      <th *matHeaderCellDef mat-header-cell mat-sort-header> ROAS</th>
+      <td *matCellDef="let element" mat-cell> {{element.roas}} </td>
+    </ng-container>
+    <ng-container matColumnDef="impressions">
+      <th *matHeaderCellDef mat-header-cell mat-sort-header> Impressions</th>
+      <td *matCellDef="let element" mat-cell> {{element.impressions}} </td>
+    </ng-container>
+    <ng-container matColumnDef="clicks">
+      <th *matHeaderCellDef mat-header-cell mat-sort-header> Clicks</th>
+      <td *matCellDef="let element" mat-cell> {{element.clicks}} </td>
+    </ng-container>
+    <ng-container matColumnDef="ctr">
+      <th *matHeaderCellDef mat-header-cell mat-sort-header> CTR</th>
+      <td *matCellDef="let element" mat-cell> {{element.ctr}} </td>
+    </ng-container>
+    <ng-container matColumnDef="cpr">
+      <th *matHeaderCellDef mat-header-cell mat-sort-header> CPR</th>
+      <td *matCellDef="let element" mat-cell> {{element.cpr}} </td>
+    </ng-container>
+    <ng-container matColumnDef="ppcOrders">
+      <th *matHeaderCellDef mat-header-cell mat-sort-header> PPC Orders</th>
+      <td *matCellDef="let element" mat-cell> {{element.ppcOrders}} </td>
+    </ng-container>
+    <ng-container matColumnDef="cr">
+      <th *matHeaderCellDef mat-header-cell mat-sort-header>CR</th>
+      <td *matCellDef="let element" mat-cell> {{element.cr}} </td>
+    </ng-container>
+
+    <tr *matHeaderRowDef="displayedColumns" mat-header-row></tr>
+    <tr *matRowDef="let row; columns: displayedColumns;" mat-row></tr>
+  </table>
+  <mat-paginator [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons></mat-paginator>
+
+</div>

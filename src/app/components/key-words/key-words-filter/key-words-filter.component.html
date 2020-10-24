@@ -1,0 +1,199 @@
+<h1 matDialogTitle>Title</h1>
+
+<mat-dialog-content>
+
+
+  <mat-horizontal-stepper #stepper>
+    <mat-step>
+
+      <ng-template matStepLabel>Filter</ng-template>
+
+      <table [dataSource]="filterDataSource" class="flat-mat-table" mat-table>
+
+        <ng-container matColumnDef="title">
+          <td *matCellDef="let element" mat-cell>{{element.title}}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="min">
+          <td *matCellDef="let element" mat-cell>
+            <mat-form-field appearance="outline" class="w-100">
+              <mat-label>Min</mat-label>
+              <input matInput>
+            </mat-form-field>
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="icon">
+          <td *matCellDef="let element" mat-cell style="text-align: center">
+            <mat-icon class="mat-18">settings_ethernet</mat-icon>
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="max">
+          <td *matCellDef="let element" mat-cell>
+            <mat-form-field appearance="outline" class="w-100">
+              <mat-label>Max</mat-label>
+              <input matInput>
+            </mat-form-field>
+          </td>
+        </ng-container>
+
+        <!--          <tr *matHeaderRowDef="filterDisplayedColumns" mat-header-row></tr>-->
+        <tr *matRowDef="let row; columns: filterDisplayedColumns;" mat-row></tr>
+      </table>
+
+    </mat-step>
+    <mat-step label="Campaign">
+      <mat-form-field appearance="legacy">
+        <mat-label>Search</mat-label>
+        <input matInput placeholder="Search">
+      </mat-form-field>
+      <table [dataSource]="CampaignDataSource" mat-table matSort>
+
+        <ng-container matColumnDef="select">
+          <th *matHeaderCellDef mat-header-cell>
+            <mat-checkbox (change)="$event ? masterToggle(CampaignSelection,CampaignDataSource) : null"
+                          [checked]="CampaignSelection.hasValue() && isAllSelected(CampaignSelection,CampaignDataSource)"
+                          [indeterminate]="CampaignSelection.hasValue() && !isAllSelected(CampaignSelection,CampaignDataSource)">
+            </mat-checkbox>
+          </th>
+          <td *matCellDef="let row" mat-cell>
+            <mat-checkbox (change)="$event ? CampaignSelection.toggle(row) : null"
+                          (click)="$event.stopPropagation()"
+                          [checked]="CampaignSelection.isSelected(row)">
+            </mat-checkbox>
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="name">
+          <th *matHeaderCellDef mat-header-cell mat-sort-header>Campaign Name</th>
+          <td *matCellDef="let element" mat-cell> {{element.name}} </td>
+        </ng-container>
+
+        <ng-container matColumnDef="status">
+          <th *matHeaderCellDef mat-header-cell mat-sort-header>Status</th>
+          <td *matCellDef="let element" mat-cell> {{element.status}} </td>
+        </ng-container>
+
+        <ng-container matColumnDef="targeting">
+          <th *matHeaderCellDef mat-header-cell mat-sort-header>Targeting</th>
+          <td *matCellDef="let element" mat-cell> {{element.targeting}} </td>
+        </ng-container>
+
+        <tr *matHeaderRowDef="CampaignDisplayedColumns" mat-header-row></tr>
+        <tr *matRowDef="let row; columns: CampaignDisplayedColumns;" mat-row></tr>
+      </table>
+      <mat-paginator #CampaignPaginator [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons></mat-paginator>
+
+    </mat-step>
+    <mat-step label="Ad Group">
+      <mat-form-field appearance="legacy">
+        <mat-label>Search</mat-label>
+        <input matInput placeholder="Search">
+      </mat-form-field>
+
+      <table [dataSource]="AddGroupDataSource" mat-table matSort>
+
+        <ng-container matColumnDef="select">
+          <th *matHeaderCellDef mat-header-cell>
+            <mat-checkbox (change)="$event ? masterToggle(AddGroupSelection,AddGroupDataSource) : null"
+                          [checked]="AddGroupSelection.hasValue() && isAllSelected(AddGroupSelection,AddGroupDataSource)"
+                          [indeterminate]="AddGroupSelection.hasValue() && !isAllSelected(AddGroupSelection,AddGroupDataSource)">
+            </mat-checkbox>
+          </th>
+          <td *matCellDef="let row" mat-cell>
+            <mat-checkbox (change)="$event ? AddGroupSelection.toggle(row) : null"
+                          (click)="$event.stopPropagation()"
+                          [checked]="AddGroupSelection.isSelected(row)">
+            </mat-checkbox>
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="name">
+          <th *matHeaderCellDef mat-header-cell mat-sort-header>AddGroup Name - Campaign Name</th>
+          <td *matCellDef="let element" mat-cell> {{element.name}} </td>
+        </ng-container>
+
+        <ng-container matColumnDef="status">
+          <th *matHeaderCellDef mat-header-cell mat-sort-header>Status</th>
+          <td *matCellDef="let element" mat-cell> {{element.status}} </td>
+        </ng-container>
+
+        <tr *matHeaderRowDef="AddGroupDisplayedColumns" mat-header-row></tr>
+        <tr *matRowDef="let row; columns: AddGroupDisplayedColumns;" mat-row></tr>
+      </table>
+      <mat-paginator #AddGroupPaginator [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons></mat-paginator>
+
+    </mat-step>
+    <mat-step label="Sku">
+
+      <mat-form-field appearance="legacy">
+        <mat-label>Search</mat-label>
+        <input matInput placeholder="Search">
+      </mat-form-field>
+
+      <table [dataSource]="SKUDataSource" mat-table matSort>
+
+        <ng-container matColumnDef="select">
+          <th *matHeaderCellDef mat-header-cell>
+            <mat-checkbox (change)="$event ? masterToggle(SKUSelection,SKUDataSource) : null"
+                          [checked]="SKUSelection.hasValue() && isAllSelected(SKUSelection,SKUDataSource)"
+                          [indeterminate]="SKUSelection.hasValue() && !isAllSelected(SKUSelection,SKUDataSource)">
+            </mat-checkbox>
+          </th>
+          <td *matCellDef="let row" mat-cell>
+            <mat-checkbox (change)="$event ? SKUSelection.toggle(row) : null"
+                          (click)="$event.stopPropagation()"
+                          [checked]="SKUSelection.isSelected(row)">
+            </mat-checkbox>
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="product">
+          <th *matHeaderCellDef mat-header-cell mat-sort-header>product</th>
+          <td *matCellDef="let element" mat-cell>
+            <div class="d-f d-f-center">
+              <img [src]="element.img" alt="" style="max-height: 60px; max-width: 60px">
+              <span>{{element.product}}</span>
+            </div>
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="sku">
+          <th *matHeaderCellDef mat-header-cell mat-sort-header>SKU</th>
+          <td *matCellDef="let element" mat-cell> {{element.sku}} </td>
+        </ng-container>
+
+        <ng-container matColumnDef="asin">
+          <th *matHeaderCellDef mat-header-cell mat-sort-header>ASIN</th>
+          <td *matCellDef="let element" mat-cell> {{element.asin}} </td>
+        </ng-container>
+
+        <ng-container matColumnDef="status">
+          <th *matHeaderCellDef mat-header-cell mat-sort-header>Status</th>
+          <td *matCellDef="let element" mat-cell> {{element.status}} </td>
+        </ng-container>
+
+        <tr *matHeaderRowDef="SKUDisplayedColumns" mat-header-row></tr>
+        <tr *matRowDef="let row; columns: SKUDisplayedColumns;" mat-row></tr>
+      </table>
+
+      <mat-paginator [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons></mat-paginator>
+
+    </mat-step>
+  </mat-horizontal-stepper>
+
+
+</mat-dialog-content>
+
+<mat-dialog-actions>
+  <button mat-button matDialogClose>Cancel</button>
+  <span class="d-f-g-1"></span>
+
+  <button (click)="stepper.previous()" mat-button>Previous</button>
+  <button (click)="stepper.selectedIndex < stepper.steps.length-1 ? stepper.next(): close()  " mat-button>
+    {{stepper.selectedIndex < stepper.steps.length - 1 ? 'Next' : 'Apply'  }}
+  </button>
+
+</mat-dialog-actions>
+

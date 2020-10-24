@@ -1,0 +1,24 @@
+table {
+  width: 100%;
+}
+
+::ng-deep {
+  .flat-mat-table {
+    .mat-form-field-wrapper {
+      padding-bottom: 0;
+    }
+
+    td.mat-cell {
+      border-bottom-style: none;
+    }
+
+    th.mat-header-cell {
+      border-bottom-style: none;
+    }
+  }
+}
+
+
+.mat-column-select {
+  overflow: initial;
+}
